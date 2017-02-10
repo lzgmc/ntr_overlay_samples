@@ -8,7 +8,7 @@ static u8 *menuEntries[7] =
     "Disable FPS Counter",
     "Display FPS Counter on both screens",
     "Display FPS Counter on Top Screen",
-    "Display FPS COunter on Bottom Screen"
+    "Display FPS Counter on Bottom Screen"
 };
 
 extern u32         g_clockMode; // 0 = none, 1 = Clock Only, 2 = Clock + Battery
