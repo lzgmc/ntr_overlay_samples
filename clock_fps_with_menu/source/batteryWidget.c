@@ -117,10 +117,11 @@ int     DrawClockAndBattery(int isBottom, u32 percent, u32 clockType)
     OvDrawRect(ADJ(batteryX + 36, isBottom), 11, 1, 8, BLANK);
     OvDrawRect(ADJ(batteryX + 53, isBottom), 11, 1, 8, BLANK);
 
-    if (batval >= 4)
+    if (batval >= 11)
         OvDrawRect(ADJ(batteryX + 37, isBottom), 12, batval, 6, LIMEGREEN);
-    else if (batval >= 2 && batval <= 3)
+    else if (batval >= 5 && batval <= 8)
         OvDrawRect(ADJ(batteryX + 37, isBottom), 12, batval, 6, ORANGE);
+
     else 
         OvDrawRect(ADJ(batteryX + 37, isBottom), 12, batval, 6, RED);
 
