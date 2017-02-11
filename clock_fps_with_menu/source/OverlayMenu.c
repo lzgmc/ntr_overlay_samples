@@ -1,7 +1,7 @@
 #include "global.h"
 #include "ov.h"
 
-static u8 *menuEntries[10] =
+static u8 *menuEntries[11] =
 {
     "Disable Clock", // 0
     "Display Clock only", // 1
@@ -54,7 +54,7 @@ int     OverlayMenu(void)
         return (0);
 
     int     posX = 95;
-    int     posY = 190;
+    int     posY = 199;
 
     if (displayMenu && key == BUTTON_R)
     {
@@ -66,7 +66,7 @@ int     OverlayMenu(void)
     // Normal mode
     if (mode == 0)
     {
-        res = showMenu("Overlay Tools Menu", 10, menuEntries, &selector);
+        res = showMenu("Overlay Tools Menu", 11, menuEntries, &selector);
         if (res >= 0 && res <= 2)
             g_clockMode = res;
         else if (res == 3)
