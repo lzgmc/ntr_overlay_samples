@@ -8,6 +8,7 @@ u32         IoBasePad;
 
 u32         g_percentage = 0;
 u32         g_clockScreen = 1;
+u32         g_clockType = 0; // 0 = 24 Hour, 1 = 12 Hour
 u32         g_clockMode = 2; // 0 = none, 1 = Clock Only, 2 = Clock + Battery, 3 = OnBottom
 u32         g_fpsScreen = 0;
 u32         g_fpsCounter = 1; // 0 = disabled, 1 = both screen, 2 = top screen only, 3 = bottom screen only
@@ -15,8 +16,8 @@ u32         g_fpsCounter = 1; // 0 = disabled, 1 = both screen, 2 = top screen o
 Result  ptmuInit(void);
 Result  mcuInit(void);
 Result  APT_CheckNew3DS(bool* out);
-int     DrawClockAndBattery(int isBottom, u32 percentage);
-int     DrawClockOnly(int isBottom);
+int     DrawClockAndBattery(int isBottom, u32 percentage, u32 clockType);
+int     DrawClockOnly(int isBottom, u32 clockType);
 int     DrawFPSCounter(u32 isBottom);
 int     DrawFPSCounterBottom(u32 isBottom, int mode);
 int     OverlayMenu(void);
@@ -48,9 +49,9 @@ u32     OverlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 forma
     if (g_clockMode != 0 && (isBottom == !g_clockScreen))
     {
         if (g_clockMode == 1)
-            framebufWasModified |= DrawClockOnly(isBottom);
+            framebufWasModified |= DrawClockOnly(isBottom, g_clockType);
         else if (g_clockMode == 2)
-            framebufWasModified |= DrawClockAndBattery(isBottom, g_percentage);       
+            framebufWasModified |= DrawClockAndBattery(isBottom, g_percentage, g_clockType);       
     }
 
     if (g_fpsScreen == 0)
