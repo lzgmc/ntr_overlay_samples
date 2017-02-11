@@ -64,7 +64,7 @@ u32     OverlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 forma
     }
 
 
-    return (framebufWasModified);
+    return (!framebufWasModified);
 }
 
 int     main() 
