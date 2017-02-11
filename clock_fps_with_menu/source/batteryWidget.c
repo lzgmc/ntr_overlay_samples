@@ -78,9 +78,9 @@ int     DrawClockAndBattery(int isBottom, u32 percent)
     OvDrawRect(ADJ(374, isBottom), 11, 1, 8, BLANK);
     OvDrawRect(ADJ(391, isBottom), 11, 1, 8, BLANK);
 
-    if (batval >= 4)
+    if (batval >= 11)
         OvDrawRect(ADJ(375, isBottom), 12, batval, 6, LIMEGREEN);
-    else if (batval >= 2 && batval <= 3)
+    else if (batval >= 5 && batval <= 8)
         OvDrawRect(ADJ(375, isBottom), 12, batval, 6, ORANGE);
     else 
         OvDrawRect(ADJ(375, isBottom), 12, batval, 6, RED);
