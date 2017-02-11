@@ -6,5 +6,6 @@ void    OvDrawTranspartBlackRect(int posX, int posY, int width, int height, u8 l
 void    OvDrawRect(int posX, int posY, int width, int height, u32 r, u32 g, u32 b);
 void    OvDrawChar(char letter, int posX, int posY, u32 r, u32 g, u32 b);
 void    OvDrawString(char *str, int posX, int posY, u32 r, u32 g, u32 b);
+void    OvDrawStringTiny(char *str, int posX, int posY, u32 r, u32 g, u32 b);
 
 #endif

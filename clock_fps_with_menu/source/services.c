@@ -13,6 +13,7 @@ typedef struct {
 } datetime_t;
 
 static Handle ptmuHandle;
+static Handle mcuHandle;
 
 Result ptmuInit(void)
 {
@@ -141,4 +142,21 @@ Result APT_CheckNew3DS(bool* out)
 
     *out = flagValue;
     return 0;
+}
+
+
+Result mcuInit(void)
+{
+    return (srv_getServiceHandle(NULL, &mcuHandle, "mcu::HWC"));
+}
+
+Result MCU_GetBatteryLevel(u8* out)
+{
+    u32* ipc = getThreadCommandBuffer();
+    ipc[0] = IPC_MakeHeader(0x5,0,0); // 0x50000
+    Result ret = svc_sendSyncRequest(mcuHandle);
+    if(ret < 0)
+        return ret;
+    *out = ipc[2];
+    return ipc[1];
 }

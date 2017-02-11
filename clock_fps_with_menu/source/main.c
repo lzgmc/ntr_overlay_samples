@@ -6,14 +6,19 @@ FS_archive  sdmcArchive = { 0x9, (FS_path){ PATH_EMPTY, 1, (u8*)"" } };
 Handle      fsUserHandle = 0;
 u32         IoBasePad;
 
-u32         g_clockMode = 2; // 0 = none, 1 = Clock Only, 2 = Clock + Battery
+u32         g_percentage = 0;
+u32         g_clockScreen = 1;
+u32         g_clockMode = 2; // 0 = none, 1 = Clock Only, 2 = Clock + Battery, 3 = OnBottom
+u32         g_fpsScreen = 0;
 u32         g_fpsCounter = 1; // 0 = disabled, 1 = both screen, 2 = top screen only, 3 = bottom screen only
 
 Result  ptmuInit(void);
+Result  mcuInit(void);
 Result  APT_CheckNew3DS(bool* out);
-int     DrawClockAndBattery(void);
-int     DrawClockOnly(void);
+int     DrawClockAndBattery(int isBottom, u32 percentage);
+int     DrawClockOnly(int isBottom);
 int     DrawFPSCounter(u32 isBottom);
+int     DrawFPSCounterBottom(u32 isBottom, int mode);
 int     OverlayMenu(void);
 
 /*
@@ -36,26 +41,34 @@ u32     OverlayCallback(u32 isBottom, u32 addr, u32 addrB, u32 stride, u32 forma
 
     int framebufWasModified = 0;
 
+    // Check for menu
     if (!isBottom)
-    {
-        // Check for menu
         framebufWasModified |= OverlayMenu();
 
+    if (g_clockMode != 0 && (isBottom == !g_clockScreen))
+    {
         if (g_clockMode == 1)
-            framebufWasModified |= DrawClockOnly();
+            framebufWasModified |= DrawClockOnly(isBottom);
         else if (g_clockMode == 2)
-            framebufWasModified |= DrawClockAndBattery();       
+            framebufWasModified |= DrawClockAndBattery(isBottom, g_percentage);       
     }
 
-    if (g_fpsCounter == 1 || (g_fpsCounter == 2 && !isBottom) || (g_fpsCounter == 3 && isBottom))
-        framebufWasModified |= DrawFPSCounter(isBottom);
+    if (g_fpsScreen == 0)
+    {
+        if (g_fpsCounter == 1 || (g_fpsCounter == 2 && !isBottom) || (g_fpsCounter == 3 && isBottom))
+            framebufWasModified |= DrawFPSCounter(isBottom);        
+    }
+    else if (g_fpsScreen && g_fpsCounter)
+    {
+        framebufWasModified |= DrawFPSCounterBottom(isBottom, g_fpsCounter);
+    }
+
 
     return (framebufWasModified);
 }
 
 int     main() 
 {
-    u32 retv;
     bool isNew3DS = false;
     
     initSharedFunc();
@@ -63,6 +76,7 @@ int     main()
     // Init srv client and ptmu client for monitoring battery status.
     initSrv();
     ptmuInit();
+    mcuInit();
 
     APT_CheckNew3DS(&isNew3DS);
 

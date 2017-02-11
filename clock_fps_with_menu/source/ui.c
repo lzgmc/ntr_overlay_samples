@@ -23,19 +23,19 @@ u32 getKeyDebounced()
 
 s32 showMenu(u8* title, u32 entryCount, u8* captions[], int *selector) 
 {
-	u32 maxCaptions = 18;
+	u32 maxCaptions = 12;
 	u32 i;
 	u8 buf[200];
-	u32 pos = 30;
-	u32 x = 45, key = 0;
+	u32 pos = 40;
+	u32 x = 60, key = 0;
 	u32 drawStart, drawEnd;
 	int select = *selector;
 
 
 
-	black(40, 20, 320, 200);
-	pos = x;
+	black(50, 30, 300, 180);
 	OvDrawString(title, x, pos, 0, 255, 0);
+	x = 60;
 	pos += 20;
 	drawStart = (select / maxCaptions) * maxCaptions;
 	drawEnd = drawStart + maxCaptions;
@@ -46,10 +46,10 @@ s32 showMenu(u8* title, u32 entryCount, u8* captions[], int *selector)
 	}
 	for (i = drawStart; i < drawEnd; i++) 
 	{
-		strcpy(buf, (i == select) ? " * " : "   ");
+		strcpy(buf, (i == select) ? "* " : "  ");
 		strcat(buf, captions[i]);
 		OvDrawString(buf, x, pos, 255, 255, 255);
-		pos += 10;
+		pos += 12;
 	}
 
 	key = getKeyDebounced();

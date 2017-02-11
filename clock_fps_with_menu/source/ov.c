@@ -1,5 +1,6 @@
 #include "global.h"
-#include "font.h"
+#include "font_mini_4x6.h"
+#include "font6x10Linux.h"
 #include "ov.h"
 
 static u32  g_lframebuf;
@@ -123,13 +124,13 @@ void    OvDrawChar(char letter, int posX, int posY, u32 r, u32 g, u32 b)
         letter = '?';
     }
 
-    int c = (letter - 32) * 8;
+    int c = letter * 10;
 
-    for (int y = 0; y < 8; y++)
+    for (int y = 0; y < 10; y++)
     {
         u8 l = font[y + c];
         int xx = posX;
-        for (int x = 7; x >= 0; x--, xx++)
+        for (int x = 6; x > 0; x--, xx++)
         {
             if ((l >> x) & 1)
                 OvDrawPixel(addr, xx, posY + y, r, g, b);
@@ -141,13 +142,61 @@ void    OvDrawString(char *str, int posX, int posY, u32 r, u32 g, u32 b)
 {
     while(*str)
     {
-        if ((posY + 8 > 240) || (posX + 8 > g_maxWidth))
+        if ((posY + 6 > 240) || (posX + 6 > g_maxWidth))
         {
             return;
         }
 
         OvDrawChar(*str, posX, posY, r, g, b);
         str++;
-        posX += 8;    
+        posX += 6;    
+    }
+} 
+
+void    OvDrawCharTiny(char letter, int posX, int posY, u32 r, u32 g, u32 b)
+{
+
+    static int mode3D = 0;
+
+    if (g_is3DEnabled && mode3D == 0)
+    {
+        mode3D = 1;
+        OvDrawCharTiny(letter, posX - 5, posY, r, g, b);
+        mode3D = 0;
+    }
+
+    u32  addr = mode3D ? g_rframebuf : g_lframebuf;
+
+    if ((letter < 32) || (letter > 127))
+    {
+        letter = '?';
+    }
+
+    int c = (letter) * 6;
+
+    for (int y = 0; y < 6; y++)
+    {
+        u8 l = fontdata_mini_4x6[y + c];
+        int xx = posX;
+        for (int x = 3; x >= 0; x--, xx++)
+        {
+            if ((l >> x) & 1)
+                OvDrawPixel(addr, xx, posY + y, r, g, b);
+        }
+    }
+}
+
+void    OvDrawStringTiny(char *str, int posX, int posY, u32 r, u32 g, u32 b)
+{
+    while(*str)
+    {
+        if ((posY + 4 > 240) || (posX + 4 > g_maxWidth))
+        {
+            return;
+        }
+
+        OvDrawCharTiny(*str, posX, posY, r, g, b);
+        str++;
+        posX += 4;    
     }
 } 

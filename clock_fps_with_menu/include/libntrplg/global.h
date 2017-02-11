@@ -26,3 +26,10 @@
 #include "ns/ns.h"
 #include <sys/socket.h>
 #include "ui.h"
+
+enum 
+{
+    CLOCK_ONLY = 1,
+    CLOCK_BATTERY = 1 << 2,
+    CLOCK_BOTTOM = 1 << 3,
+};

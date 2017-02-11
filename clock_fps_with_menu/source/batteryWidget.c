@@ -10,8 +10,16 @@
 #define TICKS_PER_MIN 0x3BEE260A0UL
 #define TICKS_IN_5_MIN 0x12BA6BE320UL
 
+#define ADJ(posX, isBottom) (isBottom ? posX - 80 : posX)
+
 u64     osGetTime(void);
 Result  PTMU_GetBatteryLevel(u8 *out);
+Result  MCU_GetBatteryLevel(u8* out);
+
+#define LIMEGREEN   50,205,50
+#define ORANGE      255,140,0
+#define RED         255,0,0
+#define BLANK       255,255,255
 
 void    GetTimeString(char *output)
 {
@@ -24,15 +32,17 @@ void    GetTimeString(char *output)
     xsprintf(output, "%02d:%02d", hour, min);
 }
 
-int     DrawClockAndBattery(void) 
+int     DrawClockAndBattery(int isBottom, u32 percent) 
 {
-    static u32   batval = 0;
-    static u64  tick = 0;
+    static u32      batval = 0;
+    static u8      batPercent = 0;
+    static u64      tick = 0;
 
     if (svc_getSystemTick() >= tick)
     {
         u8 batteryLevel = 0;
         PTMU_GetBatteryLevel(&batteryLevel);
+        MCU_GetBatteryLevel(&batPercent);
         tick = svc_getSystemTick() + TICKS_IN_5_MIN;
 
         if (batteryLevel == 1) 
@@ -57,28 +67,45 @@ int     DrawClockAndBattery(void)
         }
     }
 
-    char buf[30] = {0};
-
-    GetTimeString(buf);
+    char buf[30] = {0};    
 
     //DrawBackground
-    OvDrawTranspartBlackRect(332, 9, 66, 12, 1);
+    OvDrawTranspartBlackRect(ADJ(338, isBottom), 9, 57, 12, 1);
 
     // Draw battery
-    OvDrawRect(378, 11, 16, 1, 255, 255, 255);
-    OvDrawRect(378, 17, 16, 1, 255, 255, 255);
-    OvDrawRect(378, 11, 1, 7, 255, 255, 255);
-    OvDrawRect(393, 11, 1, 7, 255, 255, 255);
-    OvDrawRect(378, 11, batval, 7, 255, 255, 255);
-    OvDrawRect(394, 13, 1, 3, 255, 255, 255);
+    OvDrawRect(ADJ(374, isBottom), 11, 18, 1, BLANK);
+    OvDrawRect(ADJ(374, isBottom), 18, 18, 1, BLANK);
+    OvDrawRect(ADJ(374, isBottom), 11, 1, 8, BLANK);
+    OvDrawRect(ADJ(391, isBottom), 11, 1, 8, BLANK);
+
+    if (batval >= 4)
+        OvDrawRect(ADJ(375, isBottom), 12, batval, 6, LIMEGREEN);
+    else if (batval >= 2 && batval <= 3)
+        OvDrawRect(ADJ(375, isBottom), 12, batval, 6, ORANGE);
+    else 
+        OvDrawRect(ADJ(375, isBottom), 12, batval, 6, RED);
+
+    OvDrawRect(ADJ(392, isBottom), 13, 1, 4, BLANK);
+
+    if (percent)
+    {
+        xsprintf(buf, "%d%%", batPercent);
+        int posX = ADJ(381, isBottom);
+        int len = strlen(buf) - 1;
+        posX -= (len) * 2;
+        OvDrawStringTiny(buf, posX, 12, BLANK);        
+    }
+
+
 
     // Draw clock
-    OvDrawString(buf, 335, 11, 255, 255, 255);
+    GetTimeString(buf);
+    OvDrawString(buf, ADJ(341, isBottom), 11, BLANK);
 
     return (1);
 }
 
-int     DrawClockOnly(void) 
+int     DrawClockOnly(int isBottom) 
 {
 
     char buf[30] = {0};
@@ -86,8 +113,8 @@ int     DrawClockOnly(void)
     GetTimeString(buf);
 
     //DrawBackground
-    OvDrawTranspartBlackRect(342, 9, 48, 12, 1);
+    OvDrawTranspartBlackRect(ADJ(352, isBottom), 9, 38, 12, 1);
     // Draw clock
-    OvDrawString(buf, 346, 11, 255, 255, 255);
+    OvDrawString(buf, ADJ(356, isBottom), 11, 255, 255, 255);
     return (1);
 }
