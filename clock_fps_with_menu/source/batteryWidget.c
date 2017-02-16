@@ -21,8 +21,6 @@ Result  MCU_GetBatteryLevel(u8* out);
 #define RED         255,0,0
 #define BLANK       255,255,255
 
-static char * g_speriod[] = { "AM", "PM"};
-
 int     g_clockWidgetPosX = 338;
 int     g_clockWidgetPosY = 18;
 int     g_clockWidth = 0;
@@ -104,13 +102,6 @@ int     DrawClockAndBattery(int isBottom, u32 percent, u32 clockType)
     u32 batteryX = xPos;
     u32 width = g_clockWidth = 57;
     u32 posY = g_clockWidgetPosY;
-    
-    // If it is a 12 hour clock, adjust things slightly
-    if (clockType == 0)
-    {
-        xPos = g_clockWidgetPosX - 12;
-        width = g_clockWidth = 69;
-    }
 
     //DrawBackground
     OvDrawTranspartBlackRect(ADJ(xPos, isBottom), posY - 2, width, 12, 1);
@@ -147,8 +138,6 @@ int     DrawClockAndBattery(int isBottom, u32 percent, u32 clockType)
     int period = GetTimeString(buf, clockType);
     OvDrawString(buf, ADJ(xPos, isBottom), posY, BLANK);
     xPos += 31;
-    if (clockType == 0)
-        OvDrawString(g_speriod[period], ADJ(xPos, isBottom), posY, BLANK);
 
     return (1);
 }
@@ -163,19 +152,10 @@ int     DrawClockOnly(int isBottom, u32 clockType)
     u32 xPos = g_clockWidgetPosX - 14;
     u32 width = g_clockWidth = 33;
     u32 posY = g_clockWidgetPosY;
-    
-    // If it is a 12 hour clock, adjust things slightly
-    if ( clockType == 0 )
-    {
-        xPos = g_clockWidgetPosX + 1;
-        width = g_clockWidth = 46;
-    }
 
     //DrawBackground
     OvDrawTranspartBlackRect(ADJ(xPos, isBottom), posY - 2, width, 12, 1);
     // Draw clock
     OvDrawString(buf, ADJ(xPos + 2, isBottom), posY, 255, 255, 255);
-    if (clockType == 0)
-        OvDrawString(g_speriod[period], ADJ(xPos + 33, isBottom), posY, BLANK);
     return (1);
 }
