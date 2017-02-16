@@ -24,7 +24,7 @@ Result  MCU_GetBatteryLevel(u8* out);
 static char * g_speriod[] = { "AM", "PM"};
 
 int     g_clockWidgetPosX = 338;
-int     g_clockWidgetPosY = 11;
+int     g_clockWidgetPosY = 18;
 int     g_clockWidth = 0;
 
 int    GetTimeString(char *output, u32 clockType)
