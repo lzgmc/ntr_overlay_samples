@@ -11,8 +11,8 @@ u32         g_percentage = 1;
 u32         g_clockScreen = 1;
 u32         g_clockType = 1; // 0 = 24 Hour, 1 = 12 Hour
 u32         g_clockMode = 2; // 0 = none, 1 = Clock Only, 2 = Clock + Battery, 3 = OnBottom
-u32         g_fpsScreen = 0;
-u32         g_fpsCounter = 0; // 0 = disabled, 1 = both screen, 2 = top screen only, 3 = bottom screen only
+u32         g_fpsScreen = 1;
+u32         g_fpsCounter = 2; // 0 = disabled, 1 = both screen, 2 = top screen only, 3 = bottom screen only
 
 Result      ptmuInit(void);
 Result      mcuInit(void);
