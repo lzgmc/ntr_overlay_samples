@@ -22,7 +22,7 @@ Result  MCU_GetBatteryLevel(u8* out);
 #define BLANK       255,255,255
 
 int     g_clockWidgetPosX = 338;
-int     g_clockWidgetPosY = 18;
+int     g_clockWidgetPosY = 11;
 int     g_clockWidth = 0;
 
 int    GetTimeString(char *output, u32 clockType)
